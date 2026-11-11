@@ -1,0 +1,21 @@
+{
+  "name": "technical-test-moj",
+  "private": true,
+  "scripts": {
+    "test": "bddgen && playwright test",
+    "test:ui": "bddgen && playwright test --project=ui --project=ui-bdd",
+    "test:api": "playwright test --project=api",
+    "test:headed": "bddgen && playwright test --project=ui --project=ui-bdd --headed",
+    "test:report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "playwright": "^1.65.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "playwright-bdd": "^9.2.1",
+    "typescript": "^7.0.2"
+  }
+}

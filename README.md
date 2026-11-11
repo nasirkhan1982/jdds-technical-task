@@ -1,0 +1,95 @@
+# UI and API Test Framework
+
+This project uses Playwright Test with TypeScript to test the OrangeHRM demo UI
+and Swagger Petstore API. UI scenarios are written in executable Gherkin and use
+page objects; API tests use a small Petstore client to keep endpoint operations
+separate from assertions.
+
+## Requirements
+
+- Node.js 20 or newer
+- npm
+
+## Setup
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+The browser install is required for UI tests. API tests do not require a browser.
+
+## Run tests
+
+```bash
+# Run all UI and API tests
+npm test
+
+# Run only the OrangeHRM UI tests
+npm run test:ui
+
+# Run only the Petstore API tests
+npm run test:api
+
+# Run UI tests with a visible browser
+npm run test:headed
+
+# Check TypeScript types
+npm run typecheck
+
+# Open the latest HTML report
+npm run test:report
+```
+
+Playwright writes test output to `test-results/` and the HTML report to
+`playwright-report/`.
+
+## Configuration
+
+Default URLs and endpoint paths are defined in
+[`src/config/test-environment.ts`](./src/config/test-environment.ts). Override
+the service base URLs with environment variables when using another environment:
+
+```bash
+ORANGEHRM_BASE_URL=https://opensource-demo.orangehrmlive.com \
+PETSTORE_BASE_URL=https://petstore.swagger.io/v2 \
+npm test
+```
+
+The OrangeHRM demo account defaults to `Admin` / `admin123`. Set
+`ORANGEHRM_USERNAME` and `ORANGEHRM_PASSWORD` to override those credentials.
+Do not use production credentials in these tests.
+
+## Test Framework layout
+
+```text
+src/
+  api/petstore-client.ts       # API client for Petstore operations
+  config/test-environment.ts  # UI/API base URLs and API endpoint paths
+  pages/add-employee.page.ts  # OrangeHRM employee page object
+  pages/login.page.ts         # OrangeHRM login page object
+  pages/system-users.page.ts  # OrangeHRM system-user page object
+tests/
+  api/pet.api.spec.ts         # Valid and invalid GET/POST/DELETE API tests
+  ui/employee-user.feature    # Gherkin employee and system-user scenarios
+  ui/employee-user.steps.ts   # Playwright-BDD step definitions
+  ui/login.ui.spec.ts         # Login form, valid login, and invalid login tests
+playwright.config.ts          # UI and API Playwright projects
+```
+
+## Test notes
+
+- API positive tests create uniquely identified pets. Tests that create a pet
+  remove it after use; the DELETE test also verifies the pet is no longer found.
+- Invalid API tests check the service's response for malformed JSON or a
+  non-numeric pet ID. The public Petstore demo may return different error
+  statuses for malformed JSON; that test verifies the request is rejected
+  rather than locking to one server-specific error code.
+- The OrangeHRM and Petstore sites are public demo services, so availability,
+  credentials, and server behavior may change independently of this project.
+- Successful employee/user scenarios create uniquely named records in the
+  shared OrangeHRM demo and do not delete them. Run these tests only against a
+  disposable test environment, not a production HR system.
+- Gherkin UI scenarios live in `tests/ui/*.feature`; matching step definitions
+  live in `tests/ui/*.steps.ts`. The `bddgen` command generates runnable
+  Playwright tests under `tests/ui/generated/` before UI or full-suite runs.
