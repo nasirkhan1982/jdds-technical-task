@@ -115,7 +115,7 @@ playwright.config.ts          # UI and API Playwright projects
   non-numeric pet ID. The public Petstore demo may return different error
   statuses for malformed JSON; that test verifies the request is rejected
   rather than locking to one server-specific error code.
-  -UI Tests-
+-UI Tests-
   
 - Successful employee/user scenarios create uniquely named records in the
   shared OrangeHRM demo and do not delete them. Run these tests only against a
