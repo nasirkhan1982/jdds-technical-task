@@ -5,7 +5,6 @@ import {
   type EmployeeDetails,
 } from '../../src/pages/add-employee.page';
 import { LoginPage } from '../../src/pages/login.page';
-import { SystemUsersPage } from '../../src/pages/system-users.page';
 
 const { Given, When, Then } = createBdd();
 
@@ -70,51 +69,3 @@ Then('required employee fields are reported', async ({ page }) => {
   await new AddEmployeePage(page).expectRequiredFields();
 });
 
-When('I add an employee for the new system user', async ({ page }) => {
-  const details = createEmployeeDetails();
-  employeeByPage.set(page, details);
-
-  const employeePage = new AddEmployeePage(page);
-  await employeePage.open();
-  await employeePage.fillEmployee(details);
-  await employeePage.save();
-  await employeePage.expectEmployeeSaved(details);
-});
-
-When('I open the Add User form', async ({ page }) => {
-  await new SystemUsersPage(page).openAddUser();
-});
-
-When('I create a system user for that employee', async ({ page }) => {
-  const employee = employeeByPage.get(page);
-  if (!employee) {
-    throw new Error('Employee details were not created in this scenario.');
-  }
-
-  const username = `bdduser${Date.now()}`;
-  usernameByPage.set(page, username);
-  await new SystemUsersPage(page).createUser(
-    employee,
-    username,
-    'BddTest123!',
-  );
-});
-
-When(
-  'I submit the system user form without required details',
-  async ({ page }) => {
-    await page.getByRole('button', { name: 'Save', exact: true }).click();
-  },
-);
-
-Then('the system user is listed successfully', async ({ page }) => {
-  const username = usernameByPage.get(page);
-  if (!username) {
-    throw new Error('System-user details were not created in this scenario.');
-  }
-  await new SystemUsersPage(page).expectUserListed(username);
-});
-
-Then('required system-user fields are reported', async ({ page }) => {
-  await new SystemUsersPage(page).expectRequiredFields();
-});
