@@ -1,8 +1,10 @@
-# UI and API Test Framework ( a basic boiler plate- This can be extended further by adding -  reusable fixtures, test data, JSON payload data for API testing etc)
+# UI and API Test Framework ( a basic boiler plate)
 
-This project uses Playwright Test with TypeScript to test the OrangeHRM demo UI and Swagger Petstore API. UI scenarios are written in executable Gherkin and use
+This sample test framework implemented in Playwright Test with TypeScript to test the OrangeHRM demo UI and Swagger Petstore API. UI scenarios are written in executable Gherkin and use
 page objects; API tests use a small Petstore client to keep endpoint operations
 separate from assertions.
+
+ This can be extended further by adding -  reusable fixtures, helpers, test data, JSON payloads, Utils etc)
 
 **Author:** Nasir Khan
 
